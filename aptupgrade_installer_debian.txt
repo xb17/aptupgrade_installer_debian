@@ -1,0 +1,16 @@
+#! /bin/bash
+# aptupgrade_installer_debian 
+# v1.0 : 2024-07-08 : db
+
+apt update
+apt install curl -y
+echo "deb [signed-by=/etc/apt/keyrings/apt-fast.gpg] http://ppa.launchpad.net/apt-fast/stable/ubuntu focal main" > /etc/apt/sources.list.d/apt-fast.list
+
+mkdir -p /etc/apt/keyrings
+curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA2166B8DE8BDC3367D1901C11EE2FF37CA8DA16B" | gpg --dearmor -o /etc/apt/keyrings/apt-fast.gpg
+apt-get update
+apt-get install apt-fast
+
+echo "\#\!/bin/bash" > /usr/sbin/aptupgrade
+echo "apt-fast update && apt-fast full-upgrade -y && apt-fast autoremove -y" > /usr/sbin/aptupgrade
+chmod +x /usr/sbin/aptupgrade
